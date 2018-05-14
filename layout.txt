@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twist Tuition-Log-in</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/log-in.html">Log in</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Learn
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/learn/browse.html">Browse</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/learn/maths.html">Mathematics</a>
+              <a class="dropdown-item" href="/learn/non-verbal.html">Non Verbal Reasoning</a>
+              <a class="dropdown-item" href="/learn/verbal.html">Verbal Reasoning</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              My Statistics
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/my-stats/performance-report.html">Performance Report</a>
+              <a class="dropdown-item" href="/my-stats/personal-feedback.html">Personal Feedback</a>
+              <a class="dropdown-item" href="/my-stats/print-certificate.html">Print Certificate</a>
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <button type="button" class="btn btn-danger" id="btnLogOut">Log Out</button>
+            <script>$("#btnLogOut").hide();</script>
+            <a class="nav-link" href="/">Twist Tuition</a>
+          </li>
+        </li>
+        </ul>
+      </nav>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+<script src="/authentication.js"></script>
+<script>
+
+  var config = {
+    apiKey: "AIzaSyBhveORgX2e5KZIJAb9JTsP8YZ4T5W_31I",
+    authDomain: "twist-a-rama.firebaseapp.com",
+    databaseURL: "https://twist-a-rama.firebaseio.com",
+    projectId: "twist-a-rama",
+    storageBucket: "twist-a-rama.appspot.com",
+    messagingSenderId: "612426352757"
+  };
+  firebase.initializeApp(config);
+
+
+  firebase.auth().onAuthStateChanged(function(user) {
+    user = firebase.auth().currentUser;
+    if (user) {
+      // User is signed in.
+      var displayName = user.displayName;
+      var email = user.email;
+      var emailVerified = user.emailVerified;
+      var photoURL = user.photoURL;
+      var isAnonymous = user.isAnonymous;
+      var uid = user.uid;
+      var providerData = user.providerData;
+
+      $("#userD").css("display", "block");
+      $("#userName").text(displayName);
+      // ...
+    } else {
+      // User is signed out.
+      $("#userD").css("display", "none");
+    }
+  });
+
+</script>
+
+
+</body>
+</html>

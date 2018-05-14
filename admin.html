@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Interface</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+</head>
+<body style="padding: 10px;text-align: center;">
+
+  <div id="boringStuff">
+    <h1 class="display-1">Admin Interface</h1>
+    <hr>
+    <h5 class="display-1" style="font-size: 35px;">Please Log In</h5>
+
+    <br>
+
+
+    <h4 class="display-4" style="font-size: 20px;">Username</h4>
+    <input type="text" style="border: 1px solid #d8d8d8;border-radius: 5px;height: 35px;padding: 10px;" id="adminU">
+
+    <br>
+    <br>
+
+    <h4 class="display-4" style="font-size: 20px;">Password</h4>
+    <input type="password" style="border: 1px solid #d8d8d8;border-radius: 5px;height: 35px;padding: 10px;" id="adminP">
+
+    <br>
+    <br>
+    <button onClick="loginAdmin();" class="btn btn-info">Go to Admin Panel</button>
+  </div>
+
+  <div id="stopIt">
+    <h1 class="display-3">Incorrect Email or Password</h1>
+  </div>
+
+  <div id="adminStuff" style="text-align: left; padding: 20px;">
+    <div class="container">
+      <div style="float: right;" class="alert alert-success alert-dismissible">
+        <strong>Success!</strong> Question created succesfully!
+      </div>
+      <h1 class="display-1">Admin Dashboard</h1>
+      <div class="row">
+
+        <div class="col-12">
+          <h3 class="display-1" style="font-size: 40px;">Create Question</h3>
+          <br>
+          <br>
+        </div>
+
+        <div class="col-lg-6 col-sm-12 col-md-12">
+
+          <h3 class="display-1" style="font-size: 20px;">Question Title</h3>
+          <h3 class="display-1" style="font-size: 15px;">Example : Find the odd one out in this sequence</h3>
+          <input type="text" style="border: 1px solid #d8d8d8;border-radius: 5px;height: 35px;padding: 10px;text-transform: capitalize;" id="qTitle">
+
+          <br>
+          <br>
+
+          <h3 class="display-1" style="font-size: 20px;">Number of Answers</h3>
+          <h3 class="display-1" style="font-size: 15px;">Example : 5</h3>
+          <input  maxlength="1" type="text" style="border: 1px solid #d8d8d8;border-radius: 5px;height: 35px;padding: 10px;" id="qNumberOfAnswers">
+
+          <br>
+          <br>
+
+          <h3 class="display-1" style="font-size: 20px;">Correct Answer</h3>
+          <h3 class="display-1" style="font-size: 15px;">Example : A</h3>
+          <input  maxlength="1" type="text" style="border: 1px solid #d8d8d8;border-radius: 5px;height: 35px;padding: 10px;text-transform:uppercase;" id="qCorrectAnswer">
+
+        </div>
+        <div class="col-lg-6 col-sm-12 col-md-12">
+          <h3 class="display-1" style="font-size: 20px;">Question Type</h3>
+          <select class="form-control" id="qType" style="border: 1px solid #d8d8d8;border-radius: 5px;height: 35px;height: 40px;width: 275px;display:inline;">
+            <option value="" selected disabled hidden>Please choose a question type...</option>
+            <option value="NVR">Non-Verbal Reasoning</option>
+            <option value="MTH">Maths</option>
+            <option value="ENG">Verbal Reasoning</option>
+            <option value="CMP">Comprehension</option>
+          </select>
+          <br>
+          <br>
+
+          <h3 class="display-1" style="font-size: 20px;">Question Image URL</h3>
+          <h3 class="display-1" style="font-size: 15px;">Example : http://www.11plusforparents.co.uk/NVR/images/nvr8a.gif</h3>
+          <input type="text" style="border: 1px solid #d8d8d8;border-radius: 5px;height: 35px;padding: 10px;" id="qURL">
+          <br>
+
+          <progress value="0" max="100" id="uploader"></progress>
+          <br>
+          <input type="file" value="upload" id="fileButton" style="appearance: none; width: 100%;">
+
+          <br>
+          <br>
+
+          <h3 class="display-1" style="font-size: 20px;">Answer Explanation</h3>
+          <textarea class="form-control" id="qExplanation" rows="6" style="padding: 10px;"></textarea>
+          <br>
+          <br>
+        </div>
+        <div class="col-12">
+          <button style="float:right;" onclick="doCreateQ();" class="btn btn-success">Create Question</button>
+          <br>
+          <br>
+          <hr>
+        </div>
+
+        <div class="col-12">
+          <br>
+          <br>
+          <br>
+          <table class="table" id="qTable">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Number Of Answers</th>
+                <th scope="col">Correct Answer</th>
+                <th scope="col">Type</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-6">
+          <canvas id="myChart" width="100%" height="100px"></canvas>
+        </div>
+
+
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+
+<script>
+
+  if ($("#qTable > tbody").html() == "") {
+    $("#qTable").hide();
+  } else {
+    $("#qTable").fadeIn(500);
+  }
+
+  $(".alert").hide();
+
+  var config = {
+    apiKey: "AIzaSyBhveORgX2e5KZIJAb9JTsP8YZ4T5W_31I",
+    authDomain: "twist-a-rama.firebaseapp.com",
+    databaseURL: "https://twist-a-rama.firebaseio.com",
+    projectId: "twist-a-rama",
+    storageBucket: "twist-a-rama.appspot.com",
+    messagingSenderId: "612426352757"
+  };
+
+  firebase.initializeApp(config);
+
+
+  $("#fileButton").on("change", function(e) {
+    var file = e.target.files[0];
+
+    var storageRef = firebase.storage().ref("question_images/" + file.name);
+
+    var task = storageRef.put(file);
+
+    task.on("state_changed",
+      function progress(snapshot) {
+        var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        $("#uploader").value = percentage;
+      },
+
+      function error(err) {
+
+      },
+
+      function complete() {
+
+      }
+  )
+  })
+
+  String.prototype.capitalize = function() {
+      return this.charAt(0).toUpperCase() + this.slice(1);
+  }
+
+
+  function createQuestion(questionId, type, title, numberOfOptions, answer, imageUrl, ex) {
+
+    var title = title.capitalize();
+    var answer = answer.capitalize();
+
+    firebase.database().ref('questions/' + type + "/" + questionId).set({
+      questionID : questionId,
+      questionTitle : title,
+      correctAnswer : answer,
+      numberOfAnswers : numberOfOptions,
+      questionImageUrl : imageUrl,
+      explanation : ex
+    });
+  }
+
+  $("#adminStuff").hide();
+  $("#stopIt").hide();
+  function loginAdmin() {
+      checkVals();
+    var database = firebase.database();
+
+    var email = $("#adminU").val();
+    var pass = $("#adminP").val();
+    firebase.auth().signInWithEmailAndPassword(email, pass);
+    firebase.auth().onAuthStateChanged(function(user) {
+          var user = firebase.auth().currentUser;
+          var database = firebase.database();
+          if (user) {
+
+            if (user.uid == "Uc7fs4oFH9h7Mv5O3pjW7m9cQ4m2") {
+              $("#boringStuff").hide();
+              $("#adminStuff").show();
+              $("#stopIt").hide();
+              checkVals();
+              generateChart();
+            } else {
+              $("#stopIt").show();
+              $("#adminStuff").hide();
+              firebase.auth().signOut();
+            }
+
+            // ..
+          } else {
+            // User is signed out.
+            // ...
+          }
+        });
+
+  }
+
+  $("#qType").click(function () {
+    if ($("#qType").val() == "NVR") {
+      firebase.database().ref().child("unique").on('value', function(snapshot) {
+        var datas = snapshot.val();
+        var uniqueData = datas.NVR;
+        var unique = "NVR" + (parseInt(uniqueData) + 1);
+        final = unique;
+        uniqueData = uniqueData;
+      });
+    }
+
+    if ($("#qType").val() == "ENG") {
+      firebase.database().ref().child("unique").on('value', function(snapshot) {
+        var datas = snapshot.val();
+        var uniqueData = datas.ENG;
+        var unique = "ENG" + (parseInt(uniqueData) + 1);
+        final = unique;
+        uniqueData = uniqueData;
+      });
+    }
+
+    if ($("#qType").val() == "MTH") {
+      firebase.database().ref().child("unique").on('value', function(snapshot) {
+        var datas = snapshot.val();
+        var uniqueData = datas.MTH;
+        var unique = "MTH" + (parseInt(uniqueData) + 1);
+        final = unique;
+        uniqueData = uniqueData;
+      });
+    }
+
+    if ($("#qType").val() == "CMP") {
+      firebase.database().ref().child("unique").on('value', function(snapshot) {
+        var datas = snapshot.val();
+        var uniqueData = datas.CMP;
+        var unique = "CMP" + (parseInt(uniqueData) + 1);
+        final = unique;
+        uniqueData = uniqueData;
+      });
+    }
+
+
+    $("#newQType").text(window.final);
+
+  });
+
+  // Create Question
+  function doCreateQ() {
+    createQuestion(window.final, $('#qType').val(), $('#qTitle').val(), $('#qNumberOfAnswers').val(), $('#qCorrectAnswer').val(), $('#qURL').val(), $('#qExplanation').val());
+
+    firebase.database().ref().child("unique").on('value', function(snapshot) {
+      var datas = snapshot.val();
+      var NData = datas.NVR;
+      NVRData = NData;
+      var EData = datas.ENG;
+      ENGData = EData;
+      var MData = datas.MTH;
+      MTHData = MData;
+      var CData = datas.CMP;
+      CMPData = CData;
+    });
+
+    if ($("#qType").val() == "NVR") {
+      firebase.database().ref('unique/NVR').set(parseInt(NVRData) + 1);
+    }
+
+    if ($("#qType").val() == "ENG") {
+      firebase.database().ref('unique/ENG').set(parseInt(ENGData) + 1);
+    }
+
+    if ($("#qType").val() == "MTH") {
+      firebase.database().ref('unique/MTH').set(parseInt(MTHData) + 1);
+    }
+
+    if ($("#qType").val() == "CMP") {
+      firebase.database().ref('unique/CMP').set(parseInt(CMPData) + 1);
+    }
+
+
+
+    $('#qType').val('');
+    $('#qTitle').val('');
+    $('#qNumberOfAnswers').val('');
+    $('#qCorrectAnswer').val('');
+    $('#qURL').val('');
+    $('#newQType').text('Please select a question type');
+    $('#qType').val('');
+    $('#qExplanation').val('');
+
+    checkVals();
+    $(".alert").fadeIn(250).delay(2500).fadeOut(750);
+  }
+
+  function checkVals() {
+      $("#qTable > tbody").html("");
+
+      firebase.database().ref().child("questions").child("NVR").on('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+        var keys=child.key;
+        var datas = child.val();
+        var correcta = child.val().correctAnswer;
+        var numa = child.val().numberOfAnswers;
+        var qid = child.val().questionID;
+        var name = child.val().questionTitle;
+        var type = qid.slice(0, 3);
+        $('#qTable').append('<tr><th scope="row">' + qid + '</th><td>' + name + '</td><td>' + numa + '</td><td>' + correcta + '</td><td>' + type + '</td></tr>');
+         });
+      });
+
+      firebase.database().ref().child("questions").child("MTH").on('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+        var keys=child.key;
+        var datas = child.val();
+        var correcta = child.val().correctAnswer;
+        var numa = child.val().numberOfAnswers;
+        var qid = child.val().questionID;
+        var name = child.val().questionTitle;
+        var type = qid.slice(0, 3);
+        $('#qTable').append('<tr><th scope="row">' + qid + '</th><td>' + name + '</td><td>' + numa + '</td><td>' + correcta + '</td><td>' + type + '</td></tr>');
+         });
+      });
+
+      firebase.database().ref().child("questions").child("CMP").on('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+        var keys=child.key;
+        var datas = child.val();
+        var correcta = child.val().correctAnswer;
+        var numa = child.val().numberOfAnswers;
+        var qid = child.val().questionID;
+        var name = child.val().questionTitle;
+        var type = qid.slice(0, 3);
+        $('#qTable').append('<tr><th scope="row">' + qid + '</th><td>' + name + '</td><td>' + numa + '</td><td>' + correcta + '</td><td>' + type + '</td></tr>');
+         });
+      });
+
+      firebase.database().ref().child("questions").child("ENG").on('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+        var keys=child.key;
+        var datas = child.val();
+        var correcta = child.val().correctAnswer;
+        var numa = child.val().numberOfAnswers;
+        var qid = child.val().questionID;
+        var name = child.val().questionTitle;
+        var type = qid.slice(0, 3);
+        $('#qTable').append('<tr><th scope="row">' + qid + '</th><td>' + name + '</td><td>' + numa + '</td><td>' + correcta + '</td><td>' + type + '</td></tr>');
+         });
+      });
+
+      if ($("#qTable > tbody").html() == "") {
+        $("#qTable").hide();
+      } else {
+        $("#qTable").fadeIn(500);
+      }
+  }
+
+
+  window.onbeforeunload = closingCode;
+  function closingCode(){
+     // do something...
+     firebase.auth().signOut();
+     return null;
+  }
+
+  checkVals();
+
+  labels = [];
+  data = [];
+
+  // function generateChartData() {
+  //   testNo = 1;
+  //   firebase.database().ref().child("users").on("value", function(snapshot) {
+  //     snapshot.forEach(function(child) {
+  //         if (child.tests.test1.val() !== null) {
+  //         usersId = (child.key);
+  //         testData = (child.val().tests);
+  //         scoreData = (testData.test1.score);
+  //         score = scoreData;
+  //         userName = child.val().displayName;
+  //
+  //         labels.push(userName);
+  //         data.push(score);
+  //       }
+  //     })
+  //   });
+  // }
+  //
+  // generateChartData();
+
+  function generateChart() {
+    var ctx = document.getElementById("myChart").getContext('2d');
+    ctx.height = 250;
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'NVR Test 1 Scores',
+                data: data,
+                backgroundColor: '#6fa5fc',
+                borderColor: '#bcc7d8',
+                borderWidth: 1
+            }]
+        },
+          options: {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero:true,
+                  suggestedMax : 10
+                }
+            }]
+          }
+        }
+    });
+
+  }
+
+</script>
+
+
+
+</body>
+</html>
